@@ -1,0 +1,23 @@
+# .semaphore/semaphore.yml
+version: v1.0
+name: Pushing a Docker image
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+
+blocks:
+  - name: Push Docker image to registry
+    task:
+      jobs:
+      - name: Docker Hub
+        commands:
+          - checkout
+          - echo $DOCKER_PASSWORD | docker login --username "$DOCKER_USERNAME" --password-stdin
+          - docker build -t "$DOCKER_USERNAME"/nodeserve:latest .
+          - docker push "$DOCKER_USERNAME"/nodeserve:latest
+          - docker pull "$DOCKER_USERNAME"/nodeserve:latest
+          - docker images
+
+      secrets:
+      - name: docker-hub
