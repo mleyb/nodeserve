@@ -7,4 +7,5 @@ branches:
   only:
   - master
 script:
+- ./install.sh
 - npm install
